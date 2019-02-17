@@ -1,5 +1,6 @@
 import { Action, RECEIVE_ALL_TODOS, UPDATE_MEMO, AllTodos, Memo } from "../app";
 import { Store, createStore } from "redux";
+import flatMap from "array.prototype.flatmap";
 
 interface UserState {
   id: number;
@@ -33,29 +34,38 @@ const initialState: State = {
 const reducer = (state = initialState, action: Action): State => {
   switch (action.type) {
     case RECEIVE_ALL_TODOS: {
-      const newState: State = {
-        users: new Map(),
-        todos: new Map(),
-        memos: new Map()
-      };
-      action.payload.users.forEach(user => {
-        const { todos, ...userProps } = user;
-        newState.users.set(user.id, {
-          ...userProps,
-          todoIds: todos.map(todo => {
-            const { memos, ...todoProps } = todo;
-            newState.todos.set(todo.id, {
-              ...todoProps,
-              memoIds: memos.map(memo => {
-                newState.memos.set(memo.id, memo);
-                return memo.id;
-              })
-            });
-            return todo.id;
+      const users = action.payload.users;
+      const todos = flatMap(users, user => user.todos);
+      const memos = flatMap(todos, todo => todo.memos);
+      return {
+        users: new Map(
+          users.map(user => {
+            const { todos, ...rest } = user;
+            return [
+              user.id,
+              {
+                ...rest,
+                todoIds: todos.map(todo => todo.id)
+              }
+            ] as [number, UserState];
           })
-        });
-      });
-      return newState;
+        ),
+        todos: new Map(
+          todos.map(todo => {
+            const { memos, ...rest } = todo;
+            return [
+              todo.id,
+              {
+                ...rest,
+                memoIds: memos.map(memo => memo.id)
+              }
+            ] as [number, TodoState];
+          })
+        ),
+        memos: new Map(
+          memos.map(memo => [memo.id, memo] as [number, MemoState])
+        )
+      };
     }
     case UPDATE_MEMO: {
       const memo = state.memos.get(action.payload.memo.id);
@@ -86,8 +96,7 @@ const getAllTodos = (): AllTodos => {
     return {
       ...userProps,
       todos: todoIds.map(todoId => {
-        const todo = todos.get(todoId)!;
-        const { memoIds, ...todoProps } = todo;
+        const { memoIds, ...todoProps } = todos.get(todoId)!;
         return {
           ...todoProps,
           memos: memoIds.map(memoId => memos.get(memoId)!)

@@ -19,9 +19,11 @@
   },
   "homepage": "https://github.com/koba04/redux-store-structure-patters#readme",
   "dependencies": {
+    "array.prototype.flatmap": "^1.2.1",
     "redux": "^4.0.1"
   },
   "devDependencies": {
+    "@types/array.prototype.flatmap": "^1.2.0",
     "@types/mocha": "^5.2.6",
     "@types/node": "^11.9.4",
     "@types/redux": "^3.6.0",
