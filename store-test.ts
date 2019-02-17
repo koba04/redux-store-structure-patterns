@@ -6,16 +6,16 @@ import {
   receiveAllTodos,
   updateMemo
 } from "./app";
-import * as nestedStructure from "./patterns/nested-structured-store";
-import * as separeteListStructure from "./patterns/separate-list-structured-store";
-import * as normalizedStructure from "./patterns/normalized-structured-store";
-import * as usingMapStructure from "./patterns/using-map-structured-store";
+import * as nestedStore from "./patterns/nested-store";
+import * as separetedListStore from "./patterns/separated-list-store";
+import * as normalizedStore from "./patterns/normalized-store";
+import * as usingMapStore from "./patterns/using-map-store";
 
 const patterns = [
-  nestedStructure,
-  separeteListStructure,
-  normalizedStructure,
-  usingMapStructure
+  nestedStore,
+  separetedListStore,
+  normalizedStore,
+  usingMapStore
 ];
 
 patterns.forEach(({ getAllTodos, getMemoById, store }, i) => {
