@@ -9,8 +9,14 @@ import {
 import * as nestedStructure from "./patterns/nested-structured-store";
 import * as separeteListStructure from "./patterns/separate-list-structured-store";
 import * as normalizedStructure from "./patterns/normalized-structured-store";
+import * as usingMapStructure from "./patterns/using-map-structured-store";
 
-const patterns = [nestedStructure, separeteListStructure, normalizedStructure];
+const patterns = [
+  nestedStructure,
+  separeteListStructure,
+  normalizedStructure,
+  usingMapStructure
+];
 
 patterns.forEach(({ getAllTodos, getMemoById, store }, i) => {
   describe(`${i + 1}: receiveAllTodos`, () => {
