@@ -74,12 +74,10 @@ const reducer = (state = initialState, action: Action): State => {
       }
       return {
         ...state,
-        memos: new Map(
-          state.memos.set(memo.id, {
-            ...memo,
-            body: action.payload.memo.body
-          })
-        )
+        memos: new Map(state.memos).set(memo.id, {
+          ...memo,
+          body: action.payload.memo.body
+        })
       };
     }
     default:
