@@ -1,0 +1,33 @@
+{
+  "name": "redux-store-structure-patters",
+  "version": "1.0.0",
+  "description": "Patterns for Redux Store with a data structure that is nested",
+  "main": "index.js",
+  "scripts": {
+    "format": "prettier --write **/*.ts",
+    "test": "mocha --require ts-node/register store-test.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/koba04/redux-store-structure-patters.git"
+  },
+  "keywords": [],
+  "author": "koba04",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/koba04/redux-store-structure-patters/issues"
+  },
+  "homepage": "https://github.com/koba04/redux-store-structure-patters#readme",
+  "dependencies": {
+    "redux": "^4.0.1"
+  },
+  "devDependencies": {
+    "@types/mocha": "^5.2.6",
+    "@types/node": "^11.9.4",
+    "@types/redux": "^3.6.0",
+    "mocha": "^5.2.0",
+    "prettier": "^1.16.4",
+    "ts-node": "^8.0.2",
+    "typescript": "^3.3.3"
+  }
+}
