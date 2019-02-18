@@ -151,10 +151,6 @@ const getMemo = (state: State, id: number): Memo => {
   return state.memos[id];
 };
 
-const getMemoById = (state: State, id: number): Memo | void => {
-  return state.memos[id];
-};
-
 const getTodosByUser = (state: State, id: number): Todo[] | void => {
   if (!state.users[id]) {
     return undefined;
@@ -162,4 +158,4 @@ const getTodosByUser = (state: State, id: number): Todo[] | void => {
   return getUser(state, id).todos;
 };
 
-export { getAllTodos, getMemoById, getTodosByUser, store };
+export { getAllTodos, getMemo as getMemoById, getTodosByUser, store };

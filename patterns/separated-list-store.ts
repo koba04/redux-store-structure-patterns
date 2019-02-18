@@ -81,7 +81,6 @@ const reducer = (state = initialState, action: Action): State => {
     }
     case ADD_TODO: {
       const todoId = createNextTodoId();
-      const user = state.users[action.payload.userId];
       return {
         ...state,
         users: state.users.map(user => {
@@ -134,10 +133,6 @@ const getMemo = (state: State, id: number): Memo => {
   return state.memos.find(memo => memo.id === id)!;
 };
 
-const getMemoById = (state: State, id: number): Memo | void => {
-  return state.memos.find(memo => memo.id === id);
-};
-
 const getTodosByUser = (state: State, id: number): Todo[] | void => {
   if (!state.users.some(user => user.id === id)) {
     return undefined;
@@ -145,4 +140,4 @@ const getTodosByUser = (state: State, id: number): Todo[] | void => {
   return getUser(state, id).todos;
 };
 
-export { getAllTodos, getMemoById, getTodosByUser, store };
+export { getAllTodos, getMemo as getMemoById, getTodosByUser, store };
