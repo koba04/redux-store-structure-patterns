@@ -43,7 +43,7 @@ const mockApiResponse: User[] = [
     name: "John",
     todos: [
       {
-        id: 3,
+        id: 2,
         body: "Write a song",
         memos: [
           {
@@ -62,6 +62,7 @@ const mockApiResponse: User[] = [
 
 export const RECEIVE_ALL_TODOS = "RECEIVED_ALL_TODOS";
 export const UPDATE_MEMO = "UPDATE_MEMO";
+export const ADD_TODO = "ADD_TODO";
 
 interface ReceiveAllTodosAction {
   type: "RECEIVED_ALL_TODOS";
@@ -77,7 +78,15 @@ interface UpdateMemoAction {
   };
 }
 
-export type Action = ReceiveAllTodosAction | UpdateMemoAction;
+interface AddTodoAction {
+  type: "ADD_TODO";
+  payload: {
+    userId: number;
+    todo: string;
+  };
+}
+
+export type Action = ReceiveAllTodosAction | UpdateMemoAction | AddTodoAction;
 
 export const receiveAllTodos = (): ReceiveAllTodosAction => ({
   type: RECEIVE_ALL_TODOS,
@@ -96,8 +105,22 @@ export const updateMemo = (): UpdateMemoAction => ({
   }
 });
 
+export const addTodo = (): AddTodoAction => ({
+  type: "ADD_TODO",
+  payload: {
+    userId: 2,
+    todo: "Send a PR"
+  }
+});
+
+export const createNextTodoId = () => 3;
+
 export const getExpectedAllTodosResult = (): User[] => {
   return mockApiResponse;
+};
+
+export const getExpectedAllTodosByUserResult = (id: number): Todo[] => {
+  return mockApiResponse[id - 1].todos;
 };
 
 export const getExpectedUpdateMemoResult = (): Memo => {
@@ -105,4 +128,12 @@ export const getExpectedUpdateMemoResult = (): Memo => {
     id: 4,
     body: "completed!!!"
   };
+};
+
+export const getExpectedAllTodoResult = (id: number): Todo[] => {
+  return mockApiResponse[id - 1].todos.concat({
+    id: 3,
+    body: "Send a PR",
+    memos: []
+  });
 };

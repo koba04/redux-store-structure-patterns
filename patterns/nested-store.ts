@@ -1,4 +1,13 @@
-import { Action, AllTodos, RECEIVE_ALL_TODOS, Memo, UPDATE_MEMO } from "../app";
+import {
+  Action,
+  AllTodos,
+  RECEIVE_ALL_TODOS,
+  Memo,
+  UPDATE_MEMO,
+  Todo,
+  ADD_TODO,
+  createNextTodoId
+} from "../app";
 import { createStore, Store } from "redux";
 
 interface UserState {
@@ -52,6 +61,24 @@ const reducer = (state = initialState, action: Action): State => {
         }))
       };
     }
+    case ADD_TODO: {
+      return {
+        ...state,
+        users: state.users.map(user => {
+          if (user.id !== action.payload.userId) {
+            return user;
+          }
+          return {
+            ...user,
+            todos: user.todos.concat({
+              id: createNextTodoId(),
+              body: action.payload.todo,
+              memos: []
+            })
+          };
+        })
+      };
+    }
     default:
       return state;
   }
@@ -59,12 +86,12 @@ const reducer = (state = initialState, action: Action): State => {
 
 const store: Store<State, Action> = createStore(reducer);
 
-const getAllTodos = (): AllTodos => {
-  return store.getState().users;
+const getAllTodos = (state: State): AllTodos => {
+  return state.users;
 };
 
-const getMemoById = (id: number): Memo | void => {
-  for (let user of store.getState().users) {
+const getMemoById = (state: State, id: number): Memo | void => {
+  for (let user of state.users) {
     for (let todo of user.todos) {
       for (let memo of todo.memos) {
         if (memo.id === id) {
@@ -75,4 +102,9 @@ const getMemoById = (id: number): Memo | void => {
   }
 };
 
-export { getAllTodos, getMemoById, store };
+const getTodosByUser = (state: State, id: number): Todo[] | void => {
+  const user = state.users.find(user => user.id === id);
+  return user ? user.todos : undefined;
+};
+
+export { getAllTodos, getMemoById, getTodosByUser, store };

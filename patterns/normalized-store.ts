@@ -1,4 +1,14 @@
-import { Action, RECEIVE_ALL_TODOS, UPDATE_MEMO, AllTodos, Memo } from "../app";
+import {
+  Action,
+  RECEIVE_ALL_TODOS,
+  UPDATE_MEMO,
+  AllTodos,
+  Memo,
+  Todo,
+  User,
+  createNextTodoId,
+  ADD_TODO
+} from "../app";
 import { Store, createStore } from "redux";
 import flatMap from "array.prototype.flatmap";
 
@@ -88,6 +98,28 @@ const reducer = (state = initialState, action: Action): State => {
         }
       };
     }
+    case ADD_TODO: {
+      const todoId = createNextTodoId();
+      const user = state.users[action.payload.userId];
+      return {
+        ...state,
+        users: {
+          ...state.users,
+          [user.id]: {
+            ...user,
+            todoIds: user.todoIds.concat(todoId)
+          }
+        },
+        todos: {
+          ...state.todos,
+          [todoId]: {
+            id: todoId,
+            body: action.payload.todo,
+            memoIds: []
+          }
+        }
+      };
+    }
     default:
       return state;
   }
@@ -95,25 +127,39 @@ const reducer = (state = initialState, action: Action): State => {
 
 const store: Store<State, Action> = createStore(reducer);
 
-const getAllTodos = (): AllTodos => {
-  const { userIds, users, todos, memos } = store.getState();
-  return userIds.map(userId => {
-    const { todoIds, ...userProps } = users[userId];
-    return {
-      ...userProps,
-      todos: todoIds.map(todoId => {
-        const { memoIds, ...todoProps } = todos[todoId];
-        return {
-          ...todoProps,
-          memos: memoIds.map(memoId => memos[memoId])
-        };
-      })
-    };
-  });
+const getAllTodos = (state: State): AllTodos => {
+  return state.userIds.map(userId => getUser(state, userId));
 };
 
-const getMemoById = (id: number): Memo | void => {
-  return store.getState().memos[id];
+const getUser = (state: State, id: number): User => {
+  const { todoIds, ...userProps } = state.users[id];
+  return {
+    ...userProps,
+    todos: todoIds.map(todoId => getTodo(state, todoId))
+  };
 };
 
-export { getAllTodos, getMemoById, store };
+const getTodo = (state: State, id: number): Todo => {
+  const { memoIds, ...todoProps } = state.todos[id];
+  return {
+    ...todoProps,
+    memos: memoIds.map(memoId => getMemo(state, memoId))
+  };
+};
+
+const getMemo = (state: State, id: number): Memo => {
+  return state.memos[id];
+};
+
+const getMemoById = (state: State, id: number): Memo | void => {
+  return state.memos[id];
+};
+
+const getTodosByUser = (state: State, id: number): Todo[] | void => {
+  if (!state.users[id]) {
+    return undefined;
+  }
+  return getUser(state, id).todos;
+};
+
+export { getAllTodos, getMemoById, getTodosByUser, store };
