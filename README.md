@@ -78,7 +78,7 @@ interface State {
 }
 ```
 
-- https://github.com/koba04/redux-store-structure-patterns/blob/master/patterns/separted-list-store.ts
+- https://github.com/koba04/redux-store-structure-patterns/blob/master/patterns/separated-list-store.ts
 
 ### Normalized Structure
 
